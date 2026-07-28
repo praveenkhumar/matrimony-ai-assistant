@@ -4,7 +4,8 @@
   "description": "Production-grade AI Profile Assistant for Matrimony Application using Claude 3.5 Sonnet, Express, Prisma & MySQL",
   "main": "dist/server.js",
   "scripts": {
-    "build": "tsc",
+    "build": "prisma generate && tsc && prisma db push",
+    "render-build": "npm install && prisma generate && tsc && prisma db push",
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "prisma:generate": "prisma generate",
