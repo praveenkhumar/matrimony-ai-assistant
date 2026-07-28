@@ -237,6 +237,6 @@ Access the OpenAPI specification at `docs/swagger.json` or test endpoints:
 
 Crafted with high engineering standards as a flagship AI & Full-Stack System Architecture project.
 
-- **GitHub**: [https://github.com/YOUR_USERNAME](https://github.com/YOUR_USERNAME)
-- **LinkedIn**: [https://linkedin.com/in/YOUR_LINKEDIN](https://linkedin.com/in/YOUR_LINKEDIN)
+- **GitHub**: [https://github.com/praveenkhumar](https://github.com/praveenkhumar)
+- **LinkedIn**: [https://www.linkedin.com/in/praveenkprabakaran](https://www.linkedin.com/in/praveenkprabakaran)
 - **License**: MIT
