@@ -1,0 +1,164 @@
+// Prisma Schema for Matrimony AI Profile Assistant
+// Supports MySQL in production and SQLite for local quick test mode
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // Can be switched to "mysql" via DATABASE_URL in env
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String      @id @default(uuid())
+  email        String      @unique
+  name         String
+  phone        String?
+  passwordHash String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  profile      Profile?
+  auditLogs    AiAuditLog[]
+
+  @@map("users")
+}
+
+model Profile {
+  id                 String   @id @default(uuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Existing Profile Core Fields
+  age                Int?
+  gender             String?  // Male, Female
+  religion           String?  // Hindu, Muslim, Christian, Sikh, Jain, etc.
+  caste              String?
+  motherTongue       String?  // English, Tamil, Hindi, Telugu, Malayalam, Kannada
+  education          String?
+  occupation         String?
+  salary             String?  // e.g. "12 LPA", "USD 100k"
+  location           String?  // City, State, Country
+  familyDetails      String?  // e.g., "Nuclear family, father engineer, mother home-maker"
+  
+  // AI Enhanced Fields
+  aboutMe            String?
+  partnerPreference  String?
+  headline           String?
+  shortBio           String?
+  profileSummary     String?
+  personalitySummary String?
+  
+  // Variations & Voice
+  toneVariationsJson String?  // JSON string holding formal, traditional, modern, funny versions
+  voiceScript        String?
+  
+  detectedLanguage   String   @default("English")
+  completionScore    Int      @default(0)
+  overallScore       Int      @default(0)
+  
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  sessions           QuestionSession[]
+  generations        AiGeneration[]
+  scores             ProfileScore[]
+
+  @@index([userId])
+  @@index([religion, caste])
+  @@index([location])
+  @@map("profiles")
+}
+
+model QuestionSession {
+  id          String   @id @default(uuid())
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  status      String   @default("ACTIVE") // ACTIVE, COMPLETED, ABANDONED
+  currentStep Int      @default(1)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  answers     QuestionAnswer[]
+
+  @@index([profileId])
+  @@map("question_sessions")
+}
+
+model QuestionAnswer {
+  id             String          @id @default(uuid())
+  sessionId      String
+  session        QuestionSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  questionText   String
+  fieldTarget    String          // e.g. "Hobbies", "Family Values", "Lifestyle"
+  answerText     String
+  isValidated    Boolean         @default(true)
+  rejectedReason String?
+  
+  createdAt      DateTime        @default(now())
+
+  @@index([sessionId])
+  @@map("question_answers")
+}
+
+model AiGeneration {
+  id               String   @id @default(uuid())
+  profileId        String
+  profile          Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  requestedTone    String   @default("Standard") // Standard, Formal, Modern, Traditional, Funny
+  language         String   @default("English")
+  promptTokens     Int      @default(0)
+  completionTokens Int      @default(0)
+  totalCost        Float    @default(0.0)
+  
+  rawPrompt        String
+  aiOutputJson     String
+  status           String   @default("SUCCESS") // SUCCESS, FAILED, SANITIZED
+  
+  createdAt        DateTime @default(now())
+
+  @@index([profileId])
+  @@map("ai_generations")
+}
+
+model ProfileScore {
+  id                   String   @id @default(uuid())
+  profileId            String
+  profile              Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  completenessScore    Int      @default(0)
+  readabilityScore     Int      @default(0)
+  professionalismScore Int      @default(0)
+  familyValueScore     Int      @default(0)
+  overallScore         Int      @default(0)
+  
+  suggestionsJson      String   // Array of actionable improvement tips
+  
+  createdAt            DateTime @default(now())
+
+  @@index([profileId])
+  @@map("profile_scores")
+}
+
+model AiAuditLog {
+  id             String   @id @default(uuid())
+  userId         String?
+  user           User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  action         String   // e.g., "QUESTION_SUBMIT", "GENERATE_PROFILE", "SECURITY_BLOCKED"
+  inputSanitized Boolean  @default(true)
+  status         String   // SUCCESS, REJECTED, VIOLATION
+  ipAddress      String?
+  userAgent      String?
+  details        String?
+  
+  createdAt      DateTime @default(now())
+
+  @@index([userId])
+  @@map("ai_audit_logs")
+}

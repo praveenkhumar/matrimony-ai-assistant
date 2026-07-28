@@ -1,0 +1,94 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Matrimony AI Profile Assistant REST API",
+    "version": "1.0.0",
+    "description": "Production REST API for Matrimony AI Profile Assistant powered by Claude 3.5 Sonnet Messages API and Prisma ORM."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/v1",
+      "description": "Local Development Server"
+    }
+  ],
+  "paths": {
+    "/profile/questions": {
+      "post": {
+        "summary": "Fetch existing profile & get next intelligent AI follow-up question (<15 words)",
+        "responses": {
+          "200": {
+            "description": "Next question or completion status returned successfully"
+          }
+        }
+      }
+    },
+    "/profile/answer": {
+      "post": {
+        "summary": "Submit answer to AI follow-up question with security sanitization (XSS, SQLi, PII, Profanity)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sessionId": { "type": "string" },
+                  "questionText": { "type": "string" },
+                  "fieldTarget": { "type": "string" },
+                  "answerText": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Answer validated and accepted" },
+          "422": { "description": "Security rejection due to PII, profanity, or XSS" }
+        }
+      }
+    },
+    "/profile/generate": {
+      "post": {
+        "summary": "Build prompt, call Claude Messages API, validate output, and return preview & score breakdown",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "requestedTone": { "type": "string", "example": "Standard" },
+                  "language": { "type": "string", "example": "English" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "AI Matrimonial profile generated successfully" }
+        }
+      }
+    },
+    "/profile/regenerate": {
+      "post": {
+        "summary": "Regenerate profile with specified tone variation (Formal, Traditional, Modern, Funny)",
+        "responses": {
+          "200": { "description": "Regenerated profile successfully" }
+        }
+      }
+    },
+    "/profile": {
+      "get": {
+        "summary": "Fetch current profile and score metrics",
+        "responses": {
+          "200": { "description": "Profile details returned" }
+        }
+      },
+      "put": {
+        "summary": "Accept and save finalized profile to database",
+        "responses": {
+          "200": { "description": "Profile saved to database successfully" }
+        }
+      }
+    }
+  }
+}

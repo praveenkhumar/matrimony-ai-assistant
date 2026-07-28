@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Matrimony Profile Assistant | Enterprise Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <span class="logo-icon">💖</span>
+        <div>
+          <h1>Matrimony AI Assistant</h1>
+          <p class="subtitle">Claude 3.5 Sonnet Enterprise Profile Builder</p>
+        </div>
+      </div>
+      <div class="status-badge">
+        <span class="pulse-dot"></span> System Live & Secured
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- Top Dashboard Stats -->
+    <section class="dashboard-banner">
+      <div class="card profile-overview-card">
+        <h3>User Profile State (Steps 1 & 2)</h3>
+        <div class="profile-fields-grid" id="profileFieldsGrid">
+          <!-- Dynamically populated profile summary -->
+        </div>
+      </div>
+
+      <div class="card score-summary-card">
+        <h3>Profile Quality Score</h3>
+        <div class="score-ring-wrapper">
+          <div class="score-circle" id="overallScoreCircle">
+            <span class="score-number" id="overallScoreVal">78</span>
+            <span class="score-label">/ 100</span>
+          </div>
+          <div class="score-details">
+            <p>Completeness: <strong id="compScoreVal">60%</strong></p>
+            <p>Readability: <strong id="readScoreVal">85%</strong></p>
+            <p>Professionalism: <strong id="profScoreVal">90%</strong></p>
+            <p>Family Values: <strong id="famScoreVal">75%</strong></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive 12-Step Workspace -->
+    <div class="workspace-grid">
+
+      <!-- Column 1: AI Interactive Question Collector (Steps 3, 4, 5, 6) -->
+      <section class="card collector-card">
+        <div class="card-header">
+          <h2>1. Dynamic AI Question Collector</h2>
+          <span class="step-tag">Steps 3–6</span>
+        </div>
+        <p class="section-desc">Detects missing profile fields and asks single, friendly questions (< 15 words) dynamically.</p>
+
+        <div class="missing-badge-container" id="missingSectionsContainer">
+          <!-- Missing field tags -->
+        </div>
+
+        <div class="chat-box" id="chatBox">
+          <div class="chat-message bot">
+            <div class="avatar">🤖</div>
+            <div class="bubble" id="currentQuestionBubble">
+              Loading AI question...
+            </div>
+          </div>
+        </div>
+
+        <div class="input-action-area">
+          <input type="text" id="answerInput" placeholder="Type your answer here... (Sanitized against PII, XSS, Profanity)" />
+          <button id="sendAnswerBtn" class="btn btn-primary">Send Answer</button>
+        </div>
+        <div id="validationFeedback" class="feedback-msg"></div>
+
+        <div class="action-footer">
+          <button id="triggerGenerateBtn" class="btn btn-accent full-width">✨ Generate AI Matrimonial Profile (Step 7-10)</button>
+        </div>
+      </section>
+
+      <!-- Column 2: Live AI Profile Preview & Tone Variations (Steps 9, 11, 12) -->
+      <section class="card preview-card">
+        <div class="card-header">
+          <h2>2. Matrimonial Profile Preview</h2>
+          <span class="step-tag">Steps 9, 11 & 12</span>
+        </div>
+
+        <!-- Tone Selector Pills -->
+        <div class="tone-selector">
+          <span class="tone-label">Tone Variations:</span>
+          <button class="tone-btn active" data-tone="Standard">Standard</button>
+          <button class="tone-btn" data-tone="Formal">Formal</button>
+          <button class="tone-btn" data-tone="Traditional">Traditional</button>
+          <button class="tone-btn" data-tone="Modern">Modern</button>
+          <button class="tone-btn" data-tone="Funny">Funny</button>
+        </div>
+
+        <div class="preview-content-box" id="previewContentBox">
+          <!-- Headline -->
+          <div class="preview-group">
+            <label>Headline (8-12 words)</label>
+            <input type="text" id="prevHeadline" class="editable-field" />
+          </div>
+
+          <!-- About Me -->
+          <div class="preview-group">
+            <label>About Me (Warm, Genuine & Professional)</label>
+            <textarea id="prevAboutMe" rows="4" class="editable-field"></textarea>
+          </div>
+
+          <!-- Partner Expectations -->
+          <div class="preview-group">
+            <label>Partner Expectations</label>
+            <textarea id="prevPartner" rows="3" class="editable-field"></textarea>
+          </div>
+
+          <!-- Short Bio & Personality -->
+          <div class="preview-row">
+            <div class="preview-group flex-1">
+              <label>Short Mobile Bio</label>
+              <input type="text" id="prevShortBio" class="editable-field" />
+            </div>
+            <div class="preview-group flex-1">
+              <label>Personality Summary</label>
+              <input type="text" id="prevPersonality" class="editable-field" />
+            </div>
+          </div>
+
+          <!-- Voice Script -->
+          <div class="preview-group">
+            <label>🎙️ Profile Voice Script</label>
+            <div class="voice-box" id="prevVoiceScript">Generating script...</div>
+          </div>
+        </div>
+
+        <!-- Scoring Suggestions List -->
+        <div class="suggestions-box">
+          <h4>💡 AI Optimization Suggestions</h4>
+          <ul id="suggestionsList">
+            <li>Loading suggestions...</li>
+          </ul>
+        </div>
+
+        <!-- Action Controls (Step 11) -->
+        <div class="preview-buttons">
+          <button id="regenerateBtn" class="btn btn-secondary">🔄 Regenerate</button>
+          <button id="acceptSaveBtn" class="btn btn-success">💾 Accept & Save to Database (Step 12)</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
